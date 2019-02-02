@@ -36,7 +36,7 @@ namespace GameTimer
             FrameworkElement view = screenInfo.View;
             view.DataContext = screenInfo.DataContext;
             view.HorizontalAlignment = HorizontalAlignment.Stretch;
-            view.VerticalAlignment = VerticalAlignment.Center;
+            view.VerticalAlignment = VerticalAlignment.Stretch;
             view.Margin = new Thickness(0);
 
             ScreenContainer.Children.Add(view);

@@ -80,7 +80,9 @@
     </ApplicationDefinition>
     <Compile Include="BaseScreenViewModel.cs" />
     <Compile Include="ColorToBrushConverter.cs" />
+    <Compile Include="EqualMultipleValuesConverter.cs" />
     <Compile Include="GameScreenViewModel.cs" />
+    <Compile Include="InvertedSolidColorBrushConverter.cs" />
     <Compile Include="ScreenInfo.cs" />
     <Compile Include="ViewModels\StartScreenViewModel.cs" />
     <Compile Include="ViewModels\PlayerInfo.cs" />

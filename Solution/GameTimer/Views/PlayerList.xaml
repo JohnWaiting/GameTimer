@@ -27,5 +27,4 @@
         <Button Content="Add Player" Command="{Binding AddPlayerCommand}" />
         
     </StackPanel>
-    
 </UserControl>
