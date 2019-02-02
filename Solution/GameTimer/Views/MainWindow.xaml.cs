@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using GameTimer.ViewModels;
 
-namespace GameTimer.Views
+namespace GameTimer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

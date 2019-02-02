@@ -6,9 +6,10 @@
              xmlns:local="clr-namespace:GameTimer.Views"
              xmlns:viewModels="clr-namespace:GameTimer.ViewModels"
              xmlns:gameTimer="clr-namespace:GameTimer"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:PlayerListViewModel}" x:Name="Root">
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:PlayerListViewModel}" x:Name="Root">
     <UserControl.Resources>
+        <gameTimer:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
         <ItemsControl ItemsSource="{Binding PlayerInfos}"  AlternationCount="100">
@@ -17,11 +18,14 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0}.}"/>
                         <TextBox Text="{Binding Name, Mode=TwoWay}" HorizontalAlignment="Stretch" Width="100"/>
-                        <Button Content="Remove" Command="{Binding DataContext.RemovePlayerCommand, ElementName=Root}" CommandParameter="{Binding}"/>
+                        <xctk:ColorPicker ShowDropDownButton="False" SelectedColor="{Binding Color, Mode=TwoWay}" Width="{Binding ActualHeight, ElementName=RemoveButton}"/>
+                        <Button x:Name="RemoveButton" Content="Remove" Command="{Binding DataContext.RemovePlayerCommand, ElementName=Root}" CommandParameter="{Binding}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <Button Content="Add Player" Command="{Binding AddPlayerCommand}" />
+        
     </StackPanel>
+    
 </UserControl>

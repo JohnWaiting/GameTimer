@@ -3,26 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GameTimer"
-        xmlns:views="clr-namespace:GameTimer.Views"
         xmlns:viewModels="clr-namespace:GameTimer.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized"
-        x:Name="Root" Closing="MainWindow_OnClosing" d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+        x:Name="Root" Closing="MainWindow_OnClosing" d:DataContext="{d:DesignInstance viewModels:StartScreenViewModel}">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" Executed="ApplicationClosedCommand_OnExecuted" />
     </Window.CommandBindings>
     <Grid>
-        
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-                <views:PlayerList HorizontalAlignment="Center" VerticalAlignment="Center"
-                                  DataContext="{Binding PlayerListViewModel}"/>
-        </Grid>
+        <Grid x:Name="ScreenContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
         <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Content="Close" 
                 Command="ApplicationCommands.Close"/>
     </Grid>

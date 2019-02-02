@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using Prism.Mvvm;
 
 namespace GameTimer.ViewModels
@@ -12,6 +13,13 @@ namespace GameTimer.ViewModels
         {
             get => _name;
             set => SetProperty(ref _name, value);
+        }
+
+        private Color _color;
+        public Color Color
+        {
+            get => _color;
+            set => SetProperty(ref _color, value);
         }
     }
 }

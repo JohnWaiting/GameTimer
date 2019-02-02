@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
 
 namespace GameTimer.ViewModels
 {
-    internal class MainWindowViewModel : BindableBase
+    internal class StartScreenViewModel : BaseScreenViewModel
     {
         private PlayerListViewModel _playerListViewModel = new PlayerListViewModel();
         public PlayerListViewModel PlayerListViewModel
@@ -12,8 +13,8 @@ namespace GameTimer.ViewModels
             get => _playerListViewModel;
             set => SetProperty(ref _playerListViewModel, value);
         }
-
-        public MainWindowViewModel()
+        
+        public StartScreenViewModel(IApp app) : base(app)
         {
         }
     }
