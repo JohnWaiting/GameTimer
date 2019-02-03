@@ -48,24 +48,33 @@
                 </Viewbox>
             </Grid>
 
-            <ListView Grid.Column="2" ItemsSource="{Binding History}">
-                <ListView.View>
-                    <GridView>
-                        <GridView.Columns>
-                            <GridViewColumn Header="Player" DisplayMemberBinding="{Binding Player.Name}"/>
-                            <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartTime, StringFormat={}hh\:mm\:ss}"/>
-                            <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}"/>
-                            <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndTime, StringFormat={}hh\:mm\:ss}"/>
-                        </GridView.Columns>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <Grid Grid.Column="2"  VerticalAlignment="Stretch" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Foreground="Black" VerticalAlignment="Top" Grid.Row="0">History</TextBlock>
+                <ListView ItemsSource="{Binding History}" VerticalAlignment="Stretch" Grid.Row="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn Header="Player" DisplayMemberBinding="{Binding Player.Name}"/>
+                                <GridViewColumn Header="Start" Width="60"  DisplayMemberBinding="{Binding StartTime, StringFormat={}hh\:mm\:ss}"/>
+                                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}"/>
+                                <GridViewColumn Header="End" Width="60" DisplayMemberBinding="{Binding EndTime, StringFormat={}hh\:mm\:ss}"/>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button VerticalAlignment="Bottom" Grid.Row="2" Click="EndGame_OnClick">End Game</Button>
+            </Grid>
         </Grid>
 
         <Button Content="&lt; To Start Screen" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ToStartScreen_OnClick"/>
         <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left">
             <Button Content="Next Turn (Space)" Click="NextTurnButton_OnClick"/>
-            <Button Content="Pause (Esc)" Click="PauseButton_OnClick"/>
+            <Button Content="Pause/Resume (Esc)" Click="PauseResumeButton_OnClick"/>
             <Button Content="Return To Previous (Backspace)" Click="ReturnToPreviousTurnButton_OnClick"/>
         </StackPanel>
     </Grid>

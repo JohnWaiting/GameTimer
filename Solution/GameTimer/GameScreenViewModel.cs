@@ -27,14 +27,18 @@ namespace GameTimer
 
         public ObservableCollection<TurnInfo> History { get; } = new ObservableCollection<TurnInfo>();
 
+        public Boolean IsPaused => !_currentStartTime.HasValue;
+
         public ICommand NextTurnCommand { get; }
         public ICommand PauseCommand { get; }
+        public ICommand ResumeCommand { get; }
         public ICommand ReturnToPreviousTurnCommand { get; }
 
         public GameScreenViewModel(IApp app, IEnumerable<PlayerInfo> players) : base(app)
         {
             NextTurnCommand = new DelegateCommand(NextTurnCommand_OnExecute);
             PauseCommand = new DelegateCommand(PauseCommand_OnExecute);
+            ResumeCommand = new DelegateCommand(ResumeCommand_OnExecute);
             ReturnToPreviousTurnCommand = new DelegateCommand(ReturnToPreviousTurnCommand_OnExecute);
 
             Players = players.ToList();
@@ -72,12 +76,43 @@ namespace GameTimer
 
         private void PauseCommand_OnExecute()
         {
-            throw new NotImplementedException();
+            _currentStartTime = null;
+        }
+
+        private void ResumeCommand_OnExecute()
+        {
+            if (CurrentTurn != null && !_currentStartTime.HasValue)
+            {
+                _currentStartTime = DateTime.Now - CurrentTurn.Duration;
+            }
         }
 
         private void ReturnToPreviousTurnCommand_OnExecute()
         {
-            throw new NotImplementedException();
+            TurnInfo currentTurn = CurrentTurn;
+            CurrentTurn = null;
+            if (currentTurn != null)
+            {
+                Int32 index = History.IndexOf(currentTurn);
+                if (index == 0)
+                {
+                    currentTurn.Duration = TimeSpan.Zero;
+                    currentTurn.StartTime = DateTime.Now;
+                    CurrentTurn = currentTurn;
+                }
+                else
+                {
+                    History.Remove(currentTurn);
+                    TurnInfo previousTurn = History[index - 1];
+                    CurrentTurn = previousTurn;
+                }
+
+                CurrentTurn.EndTime = null;
+                if (_currentStartTime.HasValue)
+                {
+                    _currentStartTime = DateTime.Now - CurrentTurn.Duration;
+                }
+            }
         }
     }
 
@@ -91,7 +126,13 @@ namespace GameTimer
             set => SetProperty(ref _duration, value);
         }
 
-        public DateTime StartTime { get; }
+        private DateTime _startTime;
+        public DateTime StartTime
+        {
+            get => _startTime;
+            set => SetProperty(ref _startTime, value);
+        }
+
         public PlayerInfo Player { get; }
 
         private DateTime? _endTime;
@@ -120,6 +161,11 @@ namespace GameTimer
                 }
             }
             return -1;
+        }
+
+        public static void Execute(this ICommand command)
+        {
+            command.Execute(null);
         }
     }
 }
