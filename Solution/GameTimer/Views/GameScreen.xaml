@@ -38,7 +38,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Grid Grid.Column="1" Background="{Binding CurrentPlayer.Color, Converter={StaticResource ColorToBrushConverter}}">
+            <Grid Grid.Column="1" Background="{Binding CurrentTurn.Player.Color, Converter={StaticResource ColorToBrushConverter}}">
                 <Viewbox>
                     <TextBlock Foreground="White">
                         <TextBlock.Text>
@@ -47,6 +47,19 @@
                     </TextBlock>
                 </Viewbox>
             </Grid>
+
+            <ListView Grid.Column="2" ItemsSource="{Binding History}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Player" DisplayMemberBinding="{Binding Player.Name}"/>
+                            <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartTime, StringFormat={}hh\:mm\:ss}"/>
+                            <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}"/>
+                            <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndTime, StringFormat={}hh\:mm\:ss}"/>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
 
         <Button Content="&lt; To Start Screen" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ToStartScreen_OnClick"/>

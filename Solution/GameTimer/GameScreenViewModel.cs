@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -13,23 +14,18 @@ namespace GameTimer
     {
         private DispatcherTimer _timer;
 
-        private DateTime _lastStartTime;
+        private DateTime? _currentStartTime;
 
         public IReadOnlyList<PlayerInfo> Players { get; }
-
-        private PlayerInfo _currentPlayer;
-        public PlayerInfo CurrentPlayer
-        {
-            get => _currentPlayer;
-            private set => SetProperty(ref _currentPlayer, value);
-        }
-
+        
         private TurnInfo _currentTurn;
         public TurnInfo CurrentTurn
         {
             get => _currentTurn;
             private set => SetProperty(ref _currentTurn, value);
         }
+
+        public ObservableCollection<TurnInfo> History { get; } = new ObservableCollection<TurnInfo>();
 
         public ICommand NextTurnCommand { get; }
         public ICommand PauseCommand { get; }
@@ -42,27 +38,36 @@ namespace GameTimer
             ReturnToPreviousTurnCommand = new DelegateCommand(ReturnToPreviousTurnCommand_OnExecute);
 
             Players = players.ToList();
-            CurrentPlayer = Players.First();
 
-            _timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 1, 0), DispatcherPriority.Background,
+            _timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 333), DispatcherPriority.Background,
                 OnTimerTick, Dispatcher.CurrentDispatcher);
         }
 
         private void OnTimerTick(Object sender, EventArgs e)
         {
-            if (CurrentTurn != null)
+            if (CurrentTurn != null && _currentStartTime.HasValue)
             {
-                CurrentTurn.Duration = (DateTime.Now - _lastStartTime);
+                CurrentTurn.Duration = (DateTime.Now - _currentStartTime.Value);
             }
         }
 
         private void NextTurnCommand_OnExecute()
         {
-            _lastStartTime = DateTime.Now;;
-            if (CurrentTurn == null)
+            TurnInfo currentTurn = CurrentTurn;
+            CurrentTurn = null;
+            _currentStartTime = DateTime.Now;
+
+            if (currentTurn == null)
             {
-                CurrentTurn = new TurnInfo(DateTime.Now);
+                CurrentTurn = new TurnInfo(DateTime.Now, Players.First());
             }
+            else
+            {
+                currentTurn.EndTime = _currentStartTime;
+                PlayerInfo nextPlayer = Players[(Players.IndexOf(currentTurn.Player) + 1) % Players.Count];
+                CurrentTurn = new TurnInfo(_currentStartTime.Value, nextPlayer);
+            }
+            History.Add(CurrentTurn);
         }
 
         private void PauseCommand_OnExecute()
@@ -87,12 +92,34 @@ namespace GameTimer
         }
 
         public DateTime StartTime { get; }
+        public PlayerInfo Player { get; }
 
-        public DateTime? EndTime { get; set; }
+        private DateTime? _endTime;
+        public DateTime? EndTime
+        {
+            get => _endTime;
+            set => SetProperty(ref _endTime, value);
+        }
 
-        public TurnInfo(DateTime startTime)
+        public TurnInfo(DateTime startTime, PlayerInfo player)
         {
             StartTime = startTime;
+            Player = player;
+        }
+    }
+
+    public static class Extensions
+    {
+        public static Int32 IndexOf<T>(this IReadOnlyList<T> readOnlyList, T item, Int32 startIndex = 0)
+        {
+            for (int i = 0; i < readOnlyList.Count; i++)
+            {
+                if (Equals(item, readOnlyList[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }
